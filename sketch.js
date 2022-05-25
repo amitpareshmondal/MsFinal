@@ -14,7 +14,9 @@ let sketch = function(p){
  
   let download=document.getElementById("download");
   let edit=document.getElementById("edit");
-  let comp=document.getElementById
+  let comp=document.getElementById("complete");
+  let del=document.getElementById("delete");
+  let undo=document.getElementById("undo");
   let shapes = [{
     fill_H : p.random(360),
     fill_S : 50,
@@ -81,7 +83,12 @@ let sketch = function(p){
     stroke_O_Value.class('valueDisplay');
     stroke_O_Slider = p.createSlider(0, 100, 100, 5);
     stroke_O_Slider.class('Slider');
-
+    del.addEventListener('click',p.deleteDrawing);
+    edit.addEventListener('click',p.toggleEdit);
+    comp.addEventListener('click',p.complete);
+    undo.addEventListener('click',p.undo);
+    download.onclick =p.screenShot;
+    
     // screenshot_button = p.createButton("Take SS");
     // screenshot_button.mousePressed(p.screenShot);
     // screenshot_button.class("imageButtons");
@@ -106,7 +113,7 @@ let sketch = function(p){
     // delete_button.mousePressed(p.deleteDrawing);
     // delete_button.class("Buttons");
     // delete_button.id("delete_button");
-
+    
 
     tParameters = {
       fill_H : fill_H_Slider.value(),
@@ -175,6 +182,84 @@ let sketch = function(p){
 
     dMouse.splice(0, dMouse.length);
   }
+  p.undo = function(){
+    if(shapes[shapeIndex] != undefined){
+      if(shapes[shapeIndex].indices.length > 0) shapes[shapeIndex].indices.pop();
+    }
+    console.log(shapes[shapeIndex].indices);
+  }
+
+   
+  p.screenShot = function(){
+    p.image(capture.get(0, 0, p.width, p.height), 0, 0, p.width, p.height);
+    // p.faceMesh();
+    p.drawShapes();
+    p.glow();
+    p.saveCanvas('screenShot', 'png');
+  }
+  p.toggleEdit = function(){
+    isEditMode = !isEditMode;
+
+    if(isEditMode == true){
+      edit_button.html("Edit mode on");
+    }else if(isEditMode == false){
+      edit_button.html("Edit mode off");
+    }
+  }
+
+  p.complete = function(){
+    if(shapes[shapes.length-1].indices.length > 0){
+      if(shapes[shapeIndex].indices.length == 0 && shapes.length > 1) shapes.splice(shapeIndex, 1);
+
+      shapes.push(
+        {
+          fill_H : p.random(360),
+          fill_S : 50,
+          fill_B : 100,
+          fill_O : 100,
+          stroke_H : p.random(360),
+          stroke_S : 50,
+          stroke_B : 100,
+          stroke_O : 100,
+          indices : []
+        }
+      );
+      shapeIndex = shapes.length-1;
+    }
+    console.log(shapes);
+  }
+
+  p.toggleEdit = function(){
+    isEditMode = !isEditMode;
+
+    if(isEditMode == true){
+      edit_button.html("Edit mode on");
+    }else if(isEditMode == false){
+      edit_button.html("Edit mode off");
+    }
+  }
+
+
+  p.deleteDrawing = function(){
+   
+    shapes = [
+      {
+        fill_H : p.random(360),
+        fill_S : 50,
+        fill_B : 100,
+        fill_O : 100,
+        stroke_H : p.random(360),
+        stroke_S : 50,
+        stroke_B : 100,
+        stroke_O : 100,
+        indices : []
+      }
+    ];
+    shapeIndex = 0;
+    console.log(shapes);
+  }
+
+
 
   p.mouseClicked = function(){
     if(p.mouseX >= 0 && p.mouseX <= p.width){
