@@ -52,6 +52,21 @@ body{
   
   margin-right: 15px;
 }
+.filter{
+  font-size: xx-large;
+  border-radius: 80%;
+  border: 10px double #F806CC ;
+  position: relative;
+  top: 660px;
+  left: -400px;
+  margin-left: 10px;
+}
+img{
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  
+}
 button{
  
 }
